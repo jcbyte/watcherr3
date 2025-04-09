@@ -55,8 +55,6 @@ export async function addContent(content: Content): Promise<void> {
 
 	const contentRef = getUserContentRef();
 
-	console.log(contentRef.path);
-
 	await addDoc(contentRef, contentData);
 }
 

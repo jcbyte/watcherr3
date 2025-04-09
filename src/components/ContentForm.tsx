@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { addContent, editContent } from "@/firebase/firestore";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -100,19 +101,19 @@ export default function ContentForm({
 		const newContent: Content = {
 			title: values.title,
 			type: values.type,
-			link: values.link,
-			time: values.time,
+			...(values.link && { link: values.link }),
+			...(values.time && { time: values.time }),
 			...(values.type === "series" && {
 				episode: Number(values.episode!),
 				season: Number(values.season!),
 			}),
 		} as Content;
 
-		// if (content) {
-		// 	editContent({ id: content.id, ...newContent });
-		// } else {
-		// 	addContent(newContent);
-		// }
+		if (content) {
+			editContent({ id: content.id, ...newContent });
+		} else {
+			addContent(newContent);
+		}
 
 		close(true);
 	}
