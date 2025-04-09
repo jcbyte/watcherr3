@@ -4,6 +4,7 @@ import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { ChevronRight, Dot, Edit, ExternalLink, LoaderCircle, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 export default function ContentItem({ content, onEdit }: { content: WithId<Content>; onEdit: () => void }) {
 	const [updatingContent, setUpdatingContent] = useState<boolean>(false);
@@ -78,9 +79,22 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 				<Button variant="ghost" className="size-7" disabled={updatingContent} onClick={onEdit}>
 					<Edit />
 				</Button>
-				<Button variant="ghost" className="size-7" disabled={updatingContent} onClick={() => deleteContent(content.id)}>
-					<Trash2 className="text-destructive" />
-				</Button>
+
+				<DropdownMenu>
+					<DropdownMenuTrigger>
+						<Button variant="ghost" className="size-7" disabled={updatingContent}>
+							<Trash2 className="text-destructive" />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuItem disabled={updatingContent} onClick={() => deleteContent(content.id)}>
+							<div className="flex justify-between items-center w-full">
+								<span className="text-destructive">Delete</span>
+								<Trash2 className="text-destructive size-4" />
+							</div>
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 			</div>
 		</div>
 	);
