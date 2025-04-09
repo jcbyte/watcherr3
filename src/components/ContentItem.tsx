@@ -4,6 +4,8 @@ import { WithId } from "@/util/types";
 import { Edit, Trash2 } from "lucide-react";
 
 // todo way to increase season and episode numbers easily
+// todo show time if applicable
+// todo use link if applicable
 
 export default function ContentItem({ content }: { content: WithId<Content> }) {
 	return (

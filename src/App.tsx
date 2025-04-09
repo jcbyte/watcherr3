@@ -1,34 +1,39 @@
-import ContentItem from "@/components/ContentItem";
-import { Button } from "@/components/ui/button";
-import { Content } from "@/types";
-import { WithId } from "@/util/types";
-import { Plus } from "lucide-react";
+import { app } from "@/firebase/firebase";
+import ListPage from "@/pages/ListPage";
+import { getAuth, User } from "firebase/auth";
+import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
+import SignInPage from "./pages/SignInPage";
+
+// todo animate
 
 export default function App() {
-	const [content, setContent] = useState<WithId<Content>[]>([
-		{ id: "1", title: "Film 1", type: "Film" },
-		{ id: "2", title: "Film 2", type: "Film" },
-		{ id: "3", title: "Series 1", type: "Series", season: 1, episode: 1 },
-		{ id: "4", title: "Series 2", type: "Series", season: 1, episode: 1 },
-	]);
+	const auth = getAuth(app);
+
+	const [firebaseLoaded, setFirebaseLoaded] = useState(false);
+	const [currentUser, setCurrentUser] = useState<User | null>(auth.currentUser);
+	auth.onAuthStateChanged((user) => {
+		setFirebaseLoaded(true);
+		setCurrentUser(user);
+	});
 
 	return (
 		<div className="w-full flex justify-center items-center">
-			<div className="p-2 flex flex-col justify-center items-center gap-4 w-full max-w-96">
-				<span className="text-2xl font-semibold">Watcherr3</span>
-				<div className="w-full flex flex-col justify-center items-center gap-2">
-					<Button variant="outline" className="w-full">
-						<Plus />
-						<span>Add New</span>
-					</Button>
-					<div className="w-full flex flex-col justify-center items-center gap-2">
-						{content.map((content, index) => (
-							<ContentItem key={index} content={content} />
-						))}
+			{firebaseLoaded ? (
+				currentUser ? (
+					<ListPage />
+				) : (
+					<SignInPage />
+				)
+			) : (
+				<div className="fixed top-12 flex flex-col justify-center items-center gap-4 w-full p-4">
+					<img src="vite.svg" alt="App Logo" className="size-24" />
+					<div className="flex gap-2 items-center">
+						<LoaderCircle strokeWidth={3} className="animate-spin text-muted-foreground" />
+						<p className="text-lg font-bold text-muted-foreground">Initialising Watcherr3</p>
 					</div>
 				</div>
-			</div>
+			)}
 		</div>
 	);
 }
