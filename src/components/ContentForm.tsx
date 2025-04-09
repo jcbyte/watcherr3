@@ -11,8 +11,6 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-// todo edit time
-
 const formSchema = z
 	.object({
 		title: z
@@ -20,7 +18,7 @@ const formSchema = z
 			.min(1, { message: "Title is required" })
 			.max(50, { message: "Title must be less than 50 characters" }),
 		link: z.string().optional(),
-		time: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
+		time: z.string().optional(),
 		type: z.enum(["film", "series"], { message: "Type is required" }),
 		season: z.string().optional(),
 		episode: z.string().optional(),
@@ -75,6 +73,24 @@ const formSchema = z
 				}
 			}
 		}
+
+		// Time error handling
+		if (vals.time) {
+			const timeNum = Number(vals.time);
+			if (Number.isNaN(timeNum) || !Number.isInteger(timeNum)) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Time must be a number",
+					path: ["time"],
+				});
+			} else if (timeNum <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Time be at least 1",
+					path: ["Time"],
+				});
+			}
+		}
 	});
 
 export default function ContentForm({
@@ -93,6 +109,7 @@ export default function ContentForm({
 					link: content.link,
 					episode: content.type === "series" ? content.episode.toString() : undefined,
 					season: content.type === "series" ? content.season.toString() : undefined,
+					time: String(content.time),
 			  }
 			: {
 					type: "film",
@@ -178,28 +195,52 @@ export default function ContentForm({
 						)}
 					/>
 
-					<FormField
-						control={form.control}
-						name="link"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Link</FormLabel>
-								<FormControl>
-									<Input
-										placeholder="https://www.netflix.com/gb/title/80174608"
-										autoComplete="off"
-										{...field}
-										disabled={updating}
-										className="border-none"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					<div className="flex items-start gap-2">
+						<FormField
+							control={form.control}
+							name="link"
+							render={({ field }) => (
+								<FormItem className="flex-2">
+									<FormLabel>Link</FormLabel>
+									<FormControl>
+										<Input
+											placeholder="https://www.netflix.com/gb/title/80174608"
+											autoComplete="off"
+											{...field}
+											disabled={updating}
+											className="border-none"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+
+						<FormField
+							control={form.control}
+							name="time"
+							render={({ field }) => (
+								<FormItem className="flex-1">
+									<FormLabel>Time</FormLabel>
+									<FormControl>
+										<Input
+											type="number"
+											min={1}
+											step={1}
+											autoComplete="off"
+											{...field}
+											disabled={updating}
+											className="border-none"
+										/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+					</div>
 
 					{form.getValues("type") === "series" && (
-						<div className="flex gap-2">
+						<div className="flex items-start gap-2">
 							<FormField
 								control={form.control}
 								name="season"
