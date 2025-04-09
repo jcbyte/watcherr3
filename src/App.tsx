@@ -1,7 +1,9 @@
+import ContentItem from "@/components/ContentItem";
+import { Button } from "@/components/ui/button";
 import { Content } from "@/types";
+import { WithId } from "@/util/types";
+import { Plus } from "lucide-react";
 import { useState } from "react";
-import ContentItem from "./components/ContentItem";
-import { WithId } from "./util/types";
 
 export default function App() {
 	const [content, setContent] = useState<WithId<Content>[]>([
@@ -12,10 +14,21 @@ export default function App() {
 	]);
 
 	return (
-		<div className="flex flex-col gap-2">
-			{content.map((content, index) => (
-				<ContentItem key={index} content={content} />
-			))}
+		<div className="w-full flex justify-center items-center">
+			<div className="p-2 flex flex-col justify-center items-center gap-4 w-full max-w-96">
+				<span className="text-2xl font-semibold">Watcherr3</span>
+				<div className="w-full flex flex-col justify-center items-center gap-2">
+					<Button variant="outline" className="w-full">
+						<Plus />
+						<span>Add New</span>
+					</Button>
+					<div className="w-full flex flex-col justify-center items-center gap-2">
+						{content.map((content, index) => (
+							<ContentItem key={index} content={content} />
+						))}
+					</div>
+				</div>
+			</div>
 		</div>
 	);
 }
