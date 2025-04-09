@@ -10,21 +10,27 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { useTheme } from "@/components/ui/theme-provider";
 import { firebaseSignOut } from "@/firebase/auth";
+import { getContentList } from "@/firebase/firestore";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { User } from "firebase/auth";
 import { LogOut, Moon, Plus, Sun } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+// todo skeletons whilst loading
 
 export default function AppPage({ user }: { user: User }) {
 	const { theme, setTheme } = useTheme();
 
-	const [content, setContent] = useState<WithId<Content>[]>([
-		{ id: "1", title: "Film 1", type: "Film" },
-		{ id: "2", title: "Film 2", type: "Film" },
-		{ id: "3", title: "Series 1", type: "Series", season: 1, episode: 1 },
-		{ id: "4", title: "Series 2", type: "Series", season: 1, episode: 1 },
-	]);
+	const [contentLoaded, setContentLoaded] = useState(false);
+	const [content, setContent] = useState<WithId<Content>[]>([]);
+
+	useEffect(() => {
+		getContentList().then((contentList) => {
+			setContent(contentList);
+			setContentLoaded(true);
+		});
+	});
 
 	return (
 		<div className="flex flex-col justify-center items-center gap-4 w-full max-w-96">
@@ -56,7 +62,7 @@ export default function AppPage({ user }: { user: User }) {
 			</div>
 
 			<div className="w-full flex flex-col justify-center items-center gap-2">
-				<Button variant="outline" className="w-full" onClick={() => {}}>
+				<Button variant="outline" className="w-full">
 					<Plus />
 					<span>Add New</span>
 				</Button>
