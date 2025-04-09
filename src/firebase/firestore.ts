@@ -1,7 +1,19 @@
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { getAuth, User } from "firebase/auth";
-import { collection, CollectionReference, getDocs, getFirestore, orderBy, query, Timestamp } from "firebase/firestore";
+import {
+	addDoc,
+	collection,
+	CollectionReference,
+	deleteDoc,
+	doc,
+	getDocs,
+	getFirestore,
+	orderBy,
+	query,
+	setDoc,
+	Timestamp,
+} from "firebase/firestore";
 import { app } from "./firebase";
 
 const db = getFirestore(app);
@@ -33,4 +45,35 @@ export async function getContentList(): Promise<WithId<Content>[]> {
 		return { id: contentDoc.id, ...content };
 	});
 	return contentList;
+}
+
+export async function addContent(content: Content): Promise<void> {
+	const contentData: FirebaseContent = {
+		lastUpdated: Timestamp.now(),
+		...content,
+	};
+
+	const contentRef = getUserContentRef();
+
+	console.log(contentRef.path);
+
+	await addDoc(contentRef, contentData);
+}
+
+export async function editContent(content: WithId<Content>): Promise<void> {
+	const { id: contentId, ...strippedContent } = content;
+	const contentData: FirebaseContent = {
+		lastUpdated: Timestamp.now(),
+		...strippedContent,
+	};
+
+	const contentRef = getUserContentRef();
+	const contentDocRef = doc(contentRef, contentId);
+	await setDoc(contentDocRef, contentData);
+}
+
+export async function deleteContent(contentId: string) {
+	const contentRef = getUserContentRef();
+	const contentDocRef = doc(contentRef, contentId);
+	await deleteDoc(contentDocRef);
 }
