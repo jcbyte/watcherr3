@@ -6,7 +6,6 @@ import { useState } from "react";
 import SignInPage from "./pages/SignInPage";
 
 // todo pwa
-// todo icon
 // todo animate
 
 export default function App() {
@@ -29,7 +28,7 @@ export default function App() {
 				)
 			) : (
 				<div className="fixed top-12 flex flex-col justify-center items-center gap-4 w-full p-4">
-					<img src="vite.svg" alt="App Logo" className="size-24" />
+					<img src="icon-192.png" alt="App Logo" className="size-24" />
 					<div className="flex gap-2 items-center">
 						<LoaderCircle strokeWidth={3} className="animate-spin text-muted-foreground" />
 						<p className="text-lg font-bold text-muted-foreground">Initialising Watcherr3</p>
