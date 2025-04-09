@@ -6,14 +6,34 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-const formSchema = z.object({
-	title: z.string().min(1).max(50),
-	link: z.string().optional(),
-	time: z.number().int().min(1).optional(),
-	type: z.enum(["film", "series"]),
-	season: z.number().int().min(1).optional(),
-	episode: z.number().int().min(1).optional(),
-});
+const formSchema = z
+	.object({
+		title: z
+			.string()
+			.min(1, { message: "Title is required" })
+			.max(50, { message: "Title must be less than 50 characters" }),
+		link: z.string().optional(),
+		time: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
+		type: z.enum(["film", "series"], { message: "Type is required" }),
+		season: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
+		episode: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
+	})
+	.superRefine((vals, ctx) => {
+		if (vals.type === "series") {
+			if (vals.season === undefined)
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Season is required.",
+					path: ["season"],
+				});
+			if (vals.episode === undefined)
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Episode is required.",
+					path: ["episode"],
+				});
+		}
+	});
 
 export default function ContentForm() {
 	const form = useForm<z.infer<typeof formSchema>>({
@@ -40,7 +60,7 @@ export default function ContentForm() {
 							<FormItem>
 								<FormLabel>Title</FormLabel>
 								<FormControl>
-									<Input placeholder="How to Train Your Dragon" {...field} className="border-none" />
+									<Input placeholder="How to Train Your Dragon" autoComplete="off" {...field} className="border-none" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -79,9 +99,14 @@ export default function ContentForm() {
 						name="link"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Title</FormLabel>
+								<FormLabel>Link</FormLabel>
 								<FormControl>
-									<Input placeholder="https://www.watch..." {...field} className="border-none" />
+									<Input
+										placeholder="https://www.netflix.com/gb/title/80174608"
+										autoComplete="off"
+										{...field}
+										className="border-none"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -97,7 +122,7 @@ export default function ContentForm() {
 									<FormItem>
 										<FormLabel>Season</FormLabel>
 										<FormControl>
-											<Input {...field} className="border-none" />
+											<Input type="number" min={1} step={1} autoComplete="off" {...field} className="border-none" />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -111,7 +136,7 @@ export default function ContentForm() {
 									<FormItem>
 										<FormLabel>Episode</FormLabel>
 										<FormControl>
-											<Input {...field} className="border-none" />
+											<Input type="number" min={1} step={1} autoComplete="off" {...field} className="border-none" />
 										</FormControl>
 										<FormMessage />
 									</FormItem>
