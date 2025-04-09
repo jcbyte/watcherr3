@@ -77,6 +77,7 @@ const formSchema = z
 		// Time error handling
 		if (vals.time) {
 			const timeNum = Number(vals.time);
+			console.log(vals.time, timeNum);
 			if (Number.isNaN(timeNum) || !Number.isInteger(timeNum)) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
@@ -109,7 +110,7 @@ export default function ContentForm({
 					link: content.link,
 					episode: content.type === "series" ? content.episode.toString() : undefined,
 					season: content.type === "series" ? content.season.toString() : undefined,
-					time: String(content.time),
+					time: content.time ? String(content.time) : undefined,
 			  }
 			: {
 					type: "film",

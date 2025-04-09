@@ -12,26 +12,15 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "@/components/ui/theme-provider";
 import { firebaseSignOut } from "@/firebase/auth";
-import { getContentList } from "@/firebase/firestore";
-import { Content } from "@/types";
-import { WithId } from "@/util/types";
+import useContentList from "@/hooks/useContentList";
 import { User } from "firebase/auth";
 import { LogOut, Moon, Plus, Sun } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 export default function AppPage({ user }: { user: User }) {
 	const { theme, setTheme } = useTheme();
 
-	const [contentLoaded, setContentLoaded] = useState(false);
-	const [content, setContent] = useState<WithId<Content>[]>([]);
-
-	// todo change this into a hook
-	useEffect(() => {
-		getContentList().then((contentList) => {
-			setContent(contentList);
-			setContentLoaded(true);
-		});
-	});
+	const { content } = useContentList();
 
 	const [addingContent, setAddingContent] = useState<boolean>(false);
 	const [editingContent, setEditingContent] = useState<string[]>([]);
@@ -78,7 +67,7 @@ export default function AppPage({ user }: { user: User }) {
 				<Separator />
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">
-					{contentLoaded ? (
+					{content ? (
 						content.length === 0 ? (
 							<span className="text-sm text-muted-foreground">No items yet</span>
 						) : (
