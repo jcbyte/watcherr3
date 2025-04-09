@@ -1,14 +1,14 @@
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
-import { getAuth, User } from "firebase/auth";
+import { getAuth, Unsubscribe, User } from "firebase/auth";
 import {
 	addDoc,
 	collection,
 	CollectionReference,
 	deleteDoc,
 	doc,
-	getDocs,
 	getFirestore,
+	onSnapshot,
 	orderBy,
 	query,
 	setDoc,
@@ -34,17 +34,22 @@ function getUserContentRef(): CollectionReference {
 	return collection(db, "users", user.uid, "content");
 }
 
-export async function getContentList(): Promise<WithId<Content>[]> {
+export function syncContentList(
+	setContentList: React.Dispatch<React.SetStateAction<WithId<Content>[] | undefined>>
+): Unsubscribe {
 	const contentRef = getUserContentRef();
 	const contentQuery = query(contentRef, orderBy("lastUpdated", "desc"));
-	const contentSnaps = await getDocs(contentQuery);
 
-	const contentList = contentSnaps.docs.map((contentDoc) => {
-		const contentData = contentDoc.data() as FirebaseContent;
-		const { lastUpdated, ...content } = contentData;
-		return { id: contentDoc.id, ...content };
+	const unsubscribe = onSnapshot(contentQuery, (snapshot) => {
+		const contentList = snapshot.docs.map((doc) => {
+			const contentData = doc.data() as FirebaseContent;
+			const { lastUpdated, ...content } = contentData;
+			return { id: doc.id, ...content };
+		});
+		setContentList(contentList);
 	});
-	return contentList;
+
+	return unsubscribe;
 }
 
 export async function addContent(content: Content): Promise<void> {
