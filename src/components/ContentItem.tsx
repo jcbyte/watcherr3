@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { deleteContent } from "@/firebase/firestore";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { Edit, Trash2 } from "lucide-react";
@@ -20,7 +21,7 @@ export default function ContentItem({ content }: { content: WithId<Content> }) {
 				<Button variant="ghost" className="size-7">
 					<Edit />
 				</Button>
-				<Button variant="ghost" className="size-7">
+				<Button variant="ghost" className="size-7" onClick={() => deleteContent(content.id)}>
 					<Trash2 className="text-destructive" />
 				</Button>
 			</div>

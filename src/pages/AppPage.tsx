@@ -25,6 +25,7 @@ export default function AppPage({ user }: { user: User }) {
 	const [contentLoaded, setContentLoaded] = useState(false);
 	const [content, setContent] = useState<WithId<Content>[]>([]);
 
+	// todo change this into a hook
 	useEffect(() => {
 		getContentList().then((contentList) => {
 			setContent(contentList);
