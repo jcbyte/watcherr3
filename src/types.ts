@@ -5,11 +5,11 @@ interface Watchable {
 }
 
 interface Film extends Watchable {
-	type: "Film";
+	type: "film";
 }
 
 interface Series extends Watchable {
-	type: "Series";
+	type: "series";
 	season: number;
 	episode: number;
 }
