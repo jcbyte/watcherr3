@@ -36,7 +36,7 @@ function getUserContentRef(): CollectionReference {
 
 export async function getContentList(): Promise<WithId<Content>[]> {
 	const contentRef = getUserContentRef();
-	const contentQuery = query(contentRef, orderBy("lastUpdated"));
+	const contentQuery = query(contentRef, orderBy("lastUpdated", "desc"));
 	const contentSnaps = await getDocs(contentQuery);
 
 	const contentList = contentSnaps.docs.map((contentDoc) => {

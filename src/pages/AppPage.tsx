@@ -1,3 +1,4 @@
+import ContentForm from "@/components/ContentForm";
 import ContentItem from "@/components/ContentItem";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -67,6 +68,8 @@ export default function AppPage({ user }: { user: User }) {
 					<Plus />
 					<span>Add New</span>
 				</Button>
+
+				<ContentForm />
 				<Separator />
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">
