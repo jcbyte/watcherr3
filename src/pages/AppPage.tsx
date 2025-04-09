@@ -35,6 +35,7 @@ export default function AppPage({ user }: { user: User }) {
 	});
 
 	const [addingContent, setAddingContent] = useState<boolean>(false);
+	const [editingContent, setEditingContent] = useState<string[]>([]);
 
 	return (
 		<div className="flex flex-col justify-center items-center gap-4 w-full max-w-96">
@@ -78,9 +79,25 @@ export default function AppPage({ user }: { user: User }) {
 				<Separator />
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">
-					{content.map((content, index) => (
-						<ContentItem key={index} content={content} />
-					))}
+					{content.map((content, index) =>
+						editingContent.includes(content.id) ? (
+							<ContentForm
+								key={index}
+								content={content}
+								close={() => {
+									setEditingContent((prev) => prev.filter((contentId) => contentId !== content.id));
+								}}
+							/>
+						) : (
+							<ContentItem
+								key={index}
+								content={content}
+								onEdit={() => {
+									setEditingContent((prev) => [...prev, content.id]);
+								}}
+							/>
+						)
+					)}
 				</div>
 			</div>
 		</div>
