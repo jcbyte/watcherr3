@@ -19,7 +19,7 @@ import { User } from "firebase/auth";
 import { LogOut, Moon, Plus, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// todo skeletons whilst loading
+// todo no items text
 
 export default function AppPage({ user }: { user: User }) {
 	const { theme, setTheme } = useTheme();
