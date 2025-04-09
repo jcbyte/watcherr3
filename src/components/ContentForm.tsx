@@ -6,6 +6,8 @@ import { addContent, editContent } from "@/firebase/firestore";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { LoaderCircle } from "lucide-react";
+import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -97,8 +99,11 @@ export default function ContentForm({
 			  },
 	});
 
-	// todo show progress
-	function onSubmit(values: z.infer<typeof formSchema>) {
+	const [updating, setUpdating] = useState(false);
+
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		setUpdating(true);
+
 		const newContent: Content = {
 			title: values.title,
 			type: values.type,
@@ -111,16 +116,17 @@ export default function ContentForm({
 		} as Content;
 
 		if (content) {
-			editContent({ id: content.id, ...newContent });
+			await editContent({ id: content.id, ...newContent });
 		} else {
-			addContent(newContent);
+			await addContent(newContent);
 		}
 
 		close(true);
+		setUpdating(false);
 	}
 
 	return (
-		<div className="w-full bg-card border border-border rounded-md p-4">
+		<div className="w-full bg-card rounded-md p-4">
 			<FormProvider {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
 					<FormField
@@ -130,7 +136,13 @@ export default function ContentForm({
 							<FormItem>
 								<FormLabel>Title</FormLabel>
 								<FormControl>
-									<Input placeholder="How to Train Your Dragon" autoComplete="off" {...field} className="border-none" />
+									<Input
+										placeholder="How to Train Your Dragon"
+										autoComplete="off"
+										{...field}
+										disabled={updating}
+										className="border-none"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -147,13 +159,13 @@ export default function ContentForm({
 									<RadioGroup onValueChange={field.onChange} defaultValue={field.value} className="flex gap-4">
 										<FormItem className="flex items-center">
 											<FormControl>
-												<RadioGroupItem value="film" />
+												<RadioGroupItem value="film" disabled={updating} />
 											</FormControl>
 											<FormLabel className="font-normal">Film</FormLabel>
 										</FormItem>
 										<FormItem className="flex items-center">
 											<FormControl>
-												<RadioGroupItem value="series" />
+												<RadioGroupItem value="series" disabled={updating} />
 											</FormControl>
 											<FormLabel className="font-normal">Series</FormLabel>
 										</FormItem>
@@ -175,6 +187,7 @@ export default function ContentForm({
 										placeholder="https://www.netflix.com/gb/title/80174608"
 										autoComplete="off"
 										{...field}
+										disabled={updating}
 										className="border-none"
 									/>
 								</FormControl>
@@ -192,7 +205,15 @@ export default function ContentForm({
 									<FormItem>
 										<FormLabel>Season</FormLabel>
 										<FormControl>
-											<Input type="number" min={1} step={1} autoComplete="off" {...field} className="border-none" />
+											<Input
+												type="number"
+												min={1}
+												step={1}
+												autoComplete="off"
+												{...field}
+												disabled={updating}
+												className="border-none"
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -206,7 +227,15 @@ export default function ContentForm({
 									<FormItem>
 										<FormLabel>Episode</FormLabel>
 										<FormControl>
-											<Input type="number" min={1} step={1} autoComplete="off" {...field} className="border-none" />
+											<Input
+												type="number"
+												min={1}
+												step={1}
+												autoComplete="off"
+												disabled={updating}
+												{...field}
+												className="border-none"
+											/>
 										</FormControl>
 										<FormMessage />
 									</FormItem>
@@ -216,10 +245,19 @@ export default function ContentForm({
 					)}
 
 					<div className="flex gap-2 place-self-end">
-						<Button type="button" variant="outline" onClick={() => close(false)}>
+						<Button type="button" variant="outline" disabled={updating} onClick={() => close(false)}>
 							Cancel
 						</Button>
-						<Button type="submit">Submit</Button>
+						<Button type="submit" disabled={updating}>
+							<div className="flex gap-1 items-center">
+								{updating && (
+									<div>
+										<LoaderCircle className="animate-spin" />
+									</div>
+								)}
+								<span>{content ? "Update" : "Add"}</span>
+							</div>
+						</Button>
 					</div>
 				</form>
 			</FormProvider>

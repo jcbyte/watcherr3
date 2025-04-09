@@ -10,7 +10,7 @@ import { Edit, Trash2 } from "lucide-react";
 
 export default function ContentItem({ content, onEdit }: { content: WithId<Content>; onEdit: () => void }) {
 	return (
-		<div className="w-full bg-muted rounded-md p-2 flex justify-between items-center">
+		<div className="w-full bg-card rounded-md p-2 flex justify-between items-center">
 			<div className="flex flex-col">
 				<span className="text-sm">{content.title}</span>
 				<span className="text-muted-foreground text-xs">
