@@ -8,7 +8,6 @@
 }
 
 @theme inline {
-
 	--radius-sm: calc(var(--radius) - 4px);
 
 	--radius-md: calc(var(--radius) - 2px);
@@ -81,7 +80,6 @@
 }
 
 :root {
-
 	--radius: 0.625rem;
 
 	--background: oklch(1 0 0);
@@ -148,7 +146,6 @@
 }
 
 .dark {
-
 	--background: oklch(0.141 0.005 285.823);
 
 	--foreground: oklch(0.985 0 0);
@@ -213,10 +210,10 @@
 }
 
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
+	* {
+		@apply border-border outline-ring/50;
 	}
-  body {
-    @apply bg-background text-foreground;
+	body {
+		@apply bg-background text-foreground;
 	}
 }
