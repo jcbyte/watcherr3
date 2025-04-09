@@ -97,6 +97,7 @@ export default function ContentForm({
 			  },
 	});
 
+	// todo show progress
 	function onSubmit(values: z.infer<typeof formSchema>) {
 		const newContent: Content = {
 			title: values.title,
@@ -119,7 +120,7 @@ export default function ContentForm({
 	}
 
 	return (
-		<div className="w-full bg-card rounded-md p-4">
+		<div className="w-full bg-card border border-border rounded-md p-4">
 			<FormProvider {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4">
 					<FormField

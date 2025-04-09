@@ -9,6 +9,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useTheme } from "@/components/ui/theme-provider";
 import { firebaseSignOut } from "@/firebase/auth";
 import { getContentList } from "@/firebase/firestore";
@@ -79,25 +80,27 @@ export default function AppPage({ user }: { user: User }) {
 				<Separator />
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">
-					{content.map((content, index) =>
-						editingContent.includes(content.id) ? (
-							<ContentForm
-								key={index}
-								content={content}
-								close={() => {
-									setEditingContent((prev) => prev.filter((contentId) => contentId !== content.id));
-								}}
-							/>
-						) : (
-							<ContentItem
-								key={index}
-								content={content}
-								onEdit={() => {
-									setEditingContent((prev) => [...prev, content.id]);
-								}}
-							/>
-						)
-					)}
+					{contentLoaded
+						? content.map((content, index) =>
+								editingContent.includes(content.id) ? (
+									<ContentForm
+										key={index}
+										content={content}
+										close={() => {
+											setEditingContent((prev) => prev.filter((contentId) => contentId !== content.id));
+										}}
+									/>
+								) : (
+									<ContentItem
+										key={index}
+										content={content}
+										onEdit={() => {
+											setEditingContent((prev) => [...prev, content.id]);
+										}}
+									/>
+								)
+						  )
+						: [...Array(3)].map((_, index) => <Skeleton key={index} className="w-full h-[3.25rem]" />)}
 				</div>
 			</div>
 		</div>
