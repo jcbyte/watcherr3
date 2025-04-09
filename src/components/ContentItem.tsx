@@ -5,8 +5,6 @@ import { WithId } from "@/util/types";
 import { ChevronRight, Dot, Edit, ExternalLink, LoaderCircle, Trash2 } from "lucide-react";
 import { useState } from "react";
 
-// todo show time if applicable
-
 export default function ContentItem({ content, onEdit }: { content: WithId<Content>; onEdit: () => void }) {
 	const [updatingContent, setUpdatingContent] = useState<boolean>(false);
 
@@ -24,54 +22,58 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 				) : (
 					<span className="text-sm font-semibold">{content.title}</span>
 				)}
-				{content.type === "series" && (
-					<div className="flex justify-center items-center gap-1">
-						<div className="flex justify-center items-center">
-							<span className="text-muted-foreground text-sm">Season {content.season}</span>
-							<div
-								className="p-0.5 bg-card hover:bg-muted duration-200 rounded-full"
-								onClick={async () => {
-									if (updatingContent) return;
-
-									setUpdatingContent(true);
-									await editContent({ ...content, season: content.season + 1, episode: 1 });
-									setUpdatingContent(false);
-								}}
-							>
-								{updatingContent ? (
-									<div className="size-[1.2rem]">
-										<LoaderCircle className="size-[1rem] animate-spin" />
-									</div>
-								) : (
-									<ChevronRight className="size-[1.2rem]" />
-								)}
-							</div>
-						</div>
-						<Dot className="text-muted-foreground -ml-2 size-4" />
+				<div className="flex justify-center items-center gap-1">
+					{content.type === "series" && (
 						<div className="flex justify-center items-center gap-1">
-							<span className="text-muted-foreground text-sm">Episode {content.episode}</span>
-							<div
-								className="p-0.5 bg-card hover:bg-muted duration-200 rounded-full"
-								onClick={async () => {
-									if (updatingContent) return;
+							<div className="flex justify-center items-center">
+								<span className="text-muted-foreground text-sm">Season {content.season}</span>
+								<div
+									className="p-0.5 bg-card hover:bg-muted duration-200 rounded-full"
+									onClick={async () => {
+										if (updatingContent) return;
 
-									setUpdatingContent(true);
-									await editContent({ ...content, episode: content.episode + 1 });
-									setUpdatingContent(false);
-								}}
-							>
-								{updatingContent ? (
-									<div className="size-[1.2rem]">
-										<LoaderCircle className="size-[1rem] animate-spin" />
-									</div>
-								) : (
-									<ChevronRight className="size-[1.2rem]" />
-								)}
+										setUpdatingContent(true);
+										await editContent({ ...content, season: content.season + 1, episode: 1 });
+										setUpdatingContent(false);
+									}}
+								>
+									{updatingContent ? (
+										<div className="size-[1.2rem]">
+											<LoaderCircle className="size-[1rem] animate-spin" />
+										</div>
+									) : (
+										<ChevronRight className="size-[1.2rem]" />
+									)}
+								</div>
+							</div>
+							<Dot className="text-muted-foreground -ml-2 size-4" />
+							<div className="flex justify-center items-center gap-1">
+								<span className="text-muted-foreground text-sm">Episode {content.episode}</span>
+								<div
+									className="p-0.5 bg-card hover:bg-muted duration-200 rounded-full"
+									onClick={async () => {
+										if (updatingContent) return;
+
+										setUpdatingContent(true);
+										await editContent({ ...content, episode: content.episode + 1 });
+										setUpdatingContent(false);
+									}}
+								>
+									{updatingContent ? (
+										<div className="size-[1.2rem]">
+											<LoaderCircle className="size-[1rem] animate-spin" />
+										</div>
+									) : (
+										<ChevronRight className="size-[1.2rem]" />
+									)}
+								</div>
 							</div>
 						</div>
-					</div>
-				)}
+					)}
+					{content.time && <span className="text-sm font-semibold">{content.time}m</span>}
+				</div>
 			</div>
+
 			<div className="flex gap-1">
 				<Button variant="ghost" className="size-7" disabled={updatingContent} onClick={onEdit}>
 					<Edit />
