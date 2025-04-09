@@ -18,7 +18,7 @@ export default function App() {
 	});
 
 	return (
-		<div className="w-full flex justify-center items-center">
+		<div className="w-full flex justify-center items-center p-2">
 			{firebaseLoaded ? (
 				currentUser ? (
 					<ListPage />

@@ -14,7 +14,7 @@ export default function ListPage() {
 	]);
 
 	return (
-		<div className="p-2 flex flex-col justify-center items-center gap-4 w-full max-w-96">
+		<div className="flex flex-col justify-center items-center gap-4 w-full max-w-96">
 			<span className="text-2xl font-semibold">Watcherr3</span>
 			<div className="w-full flex flex-col justify-center items-center gap-2">
 				<Button variant="outline" className="w-full">
