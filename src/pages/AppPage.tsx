@@ -19,8 +19,6 @@ import { User } from "firebase/auth";
 import { LogOut, Moon, Plus, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
 
-// todo no items text
-
 export default function AppPage({ user }: { user: User }) {
 	const { theme, setTheme } = useTheme();
 
@@ -80,8 +78,11 @@ export default function AppPage({ user }: { user: User }) {
 				<Separator />
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">
-					{contentLoaded
-						? content.map((content, index) =>
+					{contentLoaded ? (
+						content.length === 0 ? (
+							<span className="text-sm text-muted-foreground">No items yet</span>
+						) : (
+							content.map((content, index) =>
 								editingContent.includes(content.id) ? (
 									<ContentForm
 										key={index}
@@ -99,8 +100,11 @@ export default function AppPage({ user }: { user: User }) {
 										}}
 									/>
 								)
-						  )
-						: [...Array(3)].map((_, index) => <Skeleton key={index} className="w-full h-[3.25rem]" />)}
+							)
+						)
+					) : (
+						[...Array(3)].map((_, index) => <Skeleton key={index} className="w-full h-[3.25rem]" />)
+					)}
 				</div>
 			</div>
 		</div>
