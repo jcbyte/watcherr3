@@ -2,17 +2,26 @@ import { Button } from "@/components/ui/button";
 import { deleteContent } from "@/firebase/firestore";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
-import { ChevronRight, Dot, Edit, Trash2 } from "lucide-react";
+import { ChevronRight, Dot, Edit, ExternalLink, Trash2 } from "lucide-react";
 
 // todo way to increase season and episode numbers easily
 // todo show time if applicable
-// todo use link if applicable
 
 export default function ContentItem({ content, onEdit }: { content: WithId<Content>; onEdit: () => void }) {
 	return (
 		<div className="w-full bg-card rounded-md p-2 flex justify-between items-center">
 			<div className="flex flex-col">
-				<span className="text-sm">{content.title}</span>
+				{content.link ? (
+					<div
+						className="flex items-center gap-2 hover:underline cursor-pointer"
+						onClick={() => window.open(content.link, "_blank")}
+					>
+						<span className="text-sm font-semibold">{content.title}</span>
+						<ExternalLink className="size-4 text-muted-foreground" />
+					</div>
+				) : (
+					<span className="text-sm font-semibold">{content.title}</span>
+				)}
 				{content.type === "series" && (
 					<div className="flex justify-center items-center gap-1">
 						<div className="flex justify-center items-center">
