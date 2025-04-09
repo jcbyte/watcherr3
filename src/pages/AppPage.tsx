@@ -2,13 +2,16 @@ import ContentItem from "@/components/ContentItem";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { useTheme } from "@/components/ui/theme-provider";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { User } from "firebase/auth";
-import { Moon, Plus } from "lucide-react";
+import { Moon, Plus, Sun } from "lucide-react";
 import { useState } from "react";
 
 export default function AppPage({ user }: { user: User }) {
+	const { theme, setTheme } = useTheme();
+
 	const [content, setContent] = useState<WithId<Content>[]>([
 		{ id: "1", title: "Film 1", type: "Film" },
 		{ id: "2", title: "Film 2", type: "Film" },
@@ -21,9 +24,8 @@ export default function AppPage({ user }: { user: User }) {
 			<div className="flex justify-between items-center w-full">
 				<span className="text-2xl font-semibold">Watcherr3</span>
 				<div className="flex justify-center items-center gap-2">
-					<Button variant="outline" className="size-8">
-						{/* // todo change theme   */}
-						<Moon />
+					<Button variant="outline" className="size-8" onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
+						{theme === "dark" ? <Sun /> : <Moon />}
 					</Button>
 					<Avatar>
 						<AvatarImage src={user.photoURL ?? undefined} />
