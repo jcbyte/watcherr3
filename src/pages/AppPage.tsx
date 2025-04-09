@@ -8,7 +8,7 @@ import { User } from "firebase/auth";
 import { Moon, Plus } from "lucide-react";
 import { useState } from "react";
 
-export default function ListPage({ user }: { user: User }) {
+export default function AppPage({ user }: { user: User }) {
 	const [content, setContent] = useState<WithId<Content>[]>([
 		{ id: "1", title: "Film 1", type: "Film" },
 		{ id: "2", title: "Film 2", type: "Film" },

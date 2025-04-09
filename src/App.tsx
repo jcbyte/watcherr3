@@ -1,5 +1,5 @@
 import { app } from "@/firebase/firebase";
-import ListPage from "@/pages/ListPage";
+import AppPage from "@/pages/AppPage";
 import { getAuth, User } from "firebase/auth";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function App() {
 		<div className="w-full flex justify-center items-center p-2">
 			{firebaseLoaded ? (
 				currentUser ? (
-					<ListPage user={currentUser} />
+					<AppPage user={currentUser} />
 				) : (
 					<SignInPage />
 				)
