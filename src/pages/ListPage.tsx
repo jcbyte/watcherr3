@@ -1,11 +1,14 @@
 import ContentItem from "@/components/ContentItem";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
-import { Plus } from "lucide-react";
+import { User } from "firebase/auth";
+import { Moon, Plus } from "lucide-react";
 import { useState } from "react";
 
-export default function ListPage() {
+export default function ListPage({ user }: { user: User }) {
 	const [content, setContent] = useState<WithId<Content>[]>([
 		{ id: "1", title: "Film 1", type: "Film" },
 		{ id: "2", title: "Film 2", type: "Film" },
@@ -15,12 +18,25 @@ export default function ListPage() {
 
 	return (
 		<div className="flex flex-col justify-center items-center gap-4 w-full max-w-96">
-			<span className="text-2xl font-semibold">Watcherr3</span>
+			<div className="flex justify-between items-center w-full">
+				<span className="text-2xl font-semibold">Watcherr3</span>
+				<div className="flex justify-center items-center gap-2">
+					<Button variant="outline" className="size-8">
+						{/* // todo change theme   */}
+						<Moon />
+					</Button>
+					<Avatar>
+						<AvatarImage src={user.photoURL ?? undefined} />
+						<AvatarFallback>{user.displayName?.slice(0, 2)}</AvatarFallback>
+					</Avatar>
+				</div>
+			</div>
 			<div className="w-full flex flex-col justify-center items-center gap-2">
-				<Button variant="outline" className="w-full">
+				<Button variant="outline" className="w-full" onClick={() => {}}>
 					<Plus />
 					<span>Add New</span>
 				</Button>
+				<Separator />
 				<div className="w-full flex flex-col justify-center items-center gap-2">
 					{content.map((content, index) => (
 						<ContentItem key={index} content={content} />

@@ -21,7 +21,7 @@ export default function App() {
 		<div className="w-full flex justify-center items-center p-2">
 			{firebaseLoaded ? (
 				currentUser ? (
-					<ListPage />
+					<ListPage user={currentUser} />
 				) : (
 					<SignInPage />
 				)
