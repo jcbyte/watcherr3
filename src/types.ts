@@ -1,7 +1,7 @@
-interface Watchable {
+export interface Watchable {
 	title: string;
 	link?: string;
-	time?: string;
+	time?: number;
 }
 
 interface Film extends Watchable {

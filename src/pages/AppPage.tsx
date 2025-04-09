@@ -34,6 +34,8 @@ export default function AppPage({ user }: { user: User }) {
 		});
 	});
 
+	const [addingContent, setAddingContent] = useState<boolean>(false);
+
 	return (
 		<div className="flex flex-col justify-center items-center gap-4 w-full max-w-96">
 			<div className="flex justify-between items-center w-full">
@@ -64,12 +66,15 @@ export default function AppPage({ user }: { user: User }) {
 			</div>
 
 			<div className="w-full flex flex-col justify-center items-center gap-2">
-				<Button variant="outline" className="w-full">
-					<Plus />
-					<span>Add New</span>
-				</Button>
+				{addingContent ? (
+					<ContentForm close={() => setAddingContent(false)} />
+				) : (
+					<Button variant="outline" className="w-full" onClick={() => setAddingContent(true)}>
+						<Plus />
+						<span>Add New</span>
+					</Button>
+				)}
 
-				<ContentForm />
 				<Separator />
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">

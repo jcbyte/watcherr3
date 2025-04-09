@@ -2,6 +2,8 @@ import { Button } from "@/components/ui/button";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Content } from "@/types";
+import { WithId } from "@/util/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,38 +17,104 @@ const formSchema = z
 		link: z.string().optional(),
 		time: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
 		type: z.enum(["film", "series"], { message: "Type is required" }),
-		season: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
-		episode: z.number().int().min(1, { message: "Must be at least 1" }).optional(),
+		season: z.string().optional(),
+		episode: z.string().optional(),
 	})
 	.superRefine((vals, ctx) => {
 		if (vals.type === "series") {
-			if (vals.season === undefined)
+			// Season error handling
+			if (!vals.season)
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
-					message: "Season is required.",
+					message: "Season is required",
 					path: ["season"],
 				});
-			if (vals.episode === undefined)
+			else {
+				const seasonNum = Number(vals.season);
+				if (Number.isNaN(seasonNum) || !Number.isInteger(seasonNum)) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: "Season must be a number",
+						path: ["season"],
+					});
+				} else if (seasonNum <= 0) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: "Must be at least 1",
+						path: ["season"],
+					});
+				}
+			}
+
+			// Episode error handling
+			if (!vals.episode)
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
-					message: "Episode is required.",
+					message: "Episode is required",
 					path: ["episode"],
 				});
+			else {
+				const episodeNum = Number(vals.episode);
+				if (Number.isNaN(episodeNum) || !Number.isInteger(episodeNum)) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: "Episode must be a number",
+						path: ["episode"],
+					});
+				} else if (episodeNum <= 0) {
+					ctx.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: "Must be at least 1",
+						path: ["Episode"],
+					});
+				}
+			}
 		}
 	});
 
-export default function ContentForm() {
+export default function ContentForm({
+	content,
+	close,
+}: {
+	content?: WithId<Content>;
+	close: (submitted: boolean) => void;
+}) {
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
-		defaultValues: {
-			title: "test",
-		},
+		defaultValues: content
+			? {
+					title: content.title,
+					type: content.type,
+					link: content.link,
+					episode: content.type === "series" ? content.episode.toString() : undefined,
+					season: content.type === "series" ? content.season.toString() : undefined,
+			  }
+			: {
+					type: "film",
+					episode: (1).toString(),
+					season: (1).toString(),
+			  },
 	});
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		// Do something with the form values.
-		// ✅ This will be type-safe and validated.
-		console.log(values);
+		const newContent: Content = {
+			title: values.title,
+			type: values.type,
+			link: values.link,
+			time: values.time,
+			...(values.type === "series" && {
+				episode: Number(values.episode!),
+				season: Number(values.season!),
+			}),
+		} as Content;
+
+		// if (content) {
+		// 	editContent({ id: content.id, ...newContent });
+		// } else {
+		// 	addContent(newContent);
+		// }
+
+		close(true);
 	}
 
 	return (
@@ -146,7 +214,7 @@ export default function ContentForm() {
 					)}
 
 					<div className="flex gap-2 place-self-end">
-						<Button type="button" variant="outline">
+						<Button type="button" variant="outline" onClick={() => close(false)}>
 							Cancel
 						</Button>
 						<Button type="submit">Submit</Button>
