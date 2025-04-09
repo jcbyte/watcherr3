@@ -5,7 +5,6 @@ import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import SignInPage from "./pages/SignInPage";
 
-// todo pwa
 // todo animate
 
 export default function App() {
