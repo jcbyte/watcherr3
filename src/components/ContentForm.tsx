@@ -11,8 +11,6 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
-// todo season/episode boxes do not always show
-
 const formSchema = z
 	.object({
 		title: z
@@ -120,6 +118,7 @@ export default function ContentForm({
 					season: (1).toString(),
 			  },
 	});
+	const formType = form.watch("type");
 
 	const [updating, setUpdating] = useState(false);
 
@@ -242,7 +241,7 @@ export default function ContentForm({
 						/>
 					</div>
 
-					{form.getValues("type") === "series" && (
+					{formType === "series" && (
 						<div className="flex items-start gap-2">
 							<FormField
 								control={form.control}
