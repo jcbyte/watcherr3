@@ -39,7 +39,7 @@ export default function AppPage({ user }: { user: User }) {
 						<DropdownMenuTrigger>
 							<Avatar>
 								<AvatarImage src={user.photoURL ?? undefined} />
-								<AvatarFallback>{user.displayName?.slice(0, 2)}</AvatarFallback>
+								<AvatarFallback>{user.displayName?.slice(0, 2) ?? "Me"}</AvatarFallback>
 							</Avatar>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>

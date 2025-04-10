@@ -1,6 +1,6 @@
 # <img src="public/icon/icon-512.png" height="40"> &nbsp;Watcherr3
 
-Web app to serve as your watchlist for current shows and films, helping you keep track of what you still want to watch and your progress.
+Web app to serve as your watchlist for current shows and films, helping you keep track of what you want to watch and your progress.
 
 ## Production Build
 
