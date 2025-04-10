@@ -1,5 +1,5 @@
 import { Content } from "@/types";
-import { WithId } from "@/util/types";
+import { ReactSetter, WithId } from "@/util/types";
 import { getAuth, Unsubscribe, User } from "firebase/auth";
 import {
 	addDoc,
@@ -7,6 +7,7 @@ import {
 	CollectionReference,
 	deleteDoc,
 	doc,
+	DocumentSnapshot,
 	getFirestore,
 	onSnapshot,
 	orderBy,
@@ -34,19 +35,47 @@ function getUserContentRef(): CollectionReference {
 	return collection(db, "users", user.uid, "content");
 }
 
-export function syncContentList(
-	setContentList: React.Dispatch<React.SetStateAction<WithId<Content>[] | undefined>>
-): Unsubscribe {
+export function syncContentList(setContentList: ReactSetter<WithId<Content>[] | undefined>): Unsubscribe {
 	const contentRef = getUserContentRef();
+	// orderBy only relevant on the initial load
 	const contentQuery = query(contentRef, orderBy("lastUpdated", "desc"));
 
+	function getDocContent(doc: DocumentSnapshot): WithId<Content> {
+		const contentData = doc.data() as FirebaseContent;
+		const { lastUpdated, ...content } = contentData;
+		return { id: doc.id, ...content };
+	}
+
+	let initialLoad = true;
+
 	const unsubscribe = onSnapshot(contentQuery, (snapshot) => {
-		const contentList = snapshot.docs.map((doc) => {
-			const contentData = doc.data() as FirebaseContent;
-			const { lastUpdated, ...content } = contentData;
-			return { id: doc.id, ...content };
-		});
-		setContentList(contentList);
+		if (initialLoad) {
+			// Initially load as given (in order)
+			const contentList = snapshot.docs.map((doc) => getDocContent(doc));
+			setContentList(contentList);
+			initialLoad = false;
+		} else {
+			// Subsequently modify keeping the same order
+			setContentList((prev) => {
+				if (!prev) throw new Error("Content list has not been initialised properly.");
+
+				let newContentList = [...prev];
+
+				snapshot.docChanges().forEach((change) => {
+					if (change.type === "added") {
+						newContentList = [getDocContent(change.doc), ...newContentList];
+					} else if (change.type === "modified") {
+						newContentList = newContentList.map((existingContent) =>
+							existingContent.id !== change.doc.id ? existingContent : getDocContent(change.doc)
+						);
+					} else if (change.type === "removed") {
+						newContentList = newContentList.filter((existingContent) => existingContent.id !== change.doc.id);
+					}
+				});
+
+				return newContentList;
+			});
+		}
 	});
 
 	return unsubscribe;

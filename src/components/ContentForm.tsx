@@ -11,6 +11,8 @@ import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { z } from "zod";
 
+// todo season/episode boxes do not always show
+
 const formSchema = z
 	.object({
 		title: z

@@ -6,6 +6,7 @@ import { useState } from "react";
 import SignInPage from "./pages/SignInPage";
 
 // todo animate
+// todo make logo
 
 export default function App() {
 	const auth = getAuth(app);
