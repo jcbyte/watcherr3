@@ -14,11 +14,11 @@ import { useTheme } from "@/components/ui/theme-provider";
 import { firebaseSignOut } from "@/firebase/auth";
 import useContentList from "@/hooks/useContentList";
 import { User } from "firebase/auth";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Transition } from "framer-motion";
 import { LogOut, Moon, Plus, Sun } from "lucide-react";
 import { useState } from "react";
 
-// todo animate
+const springTransition: Transition = { type: "spring", stiffness: 200, damping: 20 };
 
 export default function AppPage({ user }: { user: User }) {
 	const { theme, setTheme } = useTheme();
@@ -59,18 +59,20 @@ export default function AppPage({ user }: { user: User }) {
 				</div>
 
 				<div className="w-full flex flex-col justify-center items-center gap-2">
-					{addingContent ? (
-						<ContentForm close={() => setAddingContent(false)} />
-					) : (
-						<Button variant="outline" className="w-full" onClick={() => setAddingContent(true)}>
-							<Plus />
-							<span>Add New</span>
-						</Button>
-					)}
+					<motion.div key="new-content" layout initial={false} transition={springTransition} className="w-full">
+						{addingContent ? (
+							<ContentForm close={() => setAddingContent(false)} />
+						) : (
+							<Button variant="outline" className="w-full" onClick={() => setAddingContent(true)}>
+								<Plus />
+								<span>Add New</span>
+							</Button>
+						)}
+					</motion.div>
 
 					<Separator />
 
-					<div className="w-full flex flex-col justify-center items-center gap-2 overflow-y-visible">
+					<div className="w-full flex flex-col justify-center items-center gap-2">
 						{content ? (
 							content.length === 0 ? (
 								<span className="text-sm text-muted-foreground">No items yet</span>
@@ -83,7 +85,7 @@ export default function AppPage({ user }: { user: User }) {
 											initial={{ opacity: 0, scale: 0.4 }}
 											animate={{ opacity: 1, scale: 1 }}
 											exit={{ opacity: 0, scale: 0.4 }}
-											transition={{ type: "spring", stiffness: 200, damping: 20 }}
+											transition={springTransition}
 											className="w-full"
 										>
 											{editingContent.includes(content.id) ? (

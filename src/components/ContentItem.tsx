@@ -83,7 +83,7 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 				</Button>
 
 				<DropdownMenu>
-					<DropdownMenuTrigger>
+					<DropdownMenuTrigger asChild>
 						<Button variant="ghost" className="size-7" disabled={updatingContent}>
 							<Trash2 className="text-destructive" />
 						</Button>
