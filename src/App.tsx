@@ -17,7 +17,7 @@ export default function App() {
 	});
 
 	return (
-		<div className="w-full flex justify-center items-center p-2 overflow-x-hidden">
+		<div className="w-full flex justify-center items-start p-2 min-h-screen overflow-hidden">
 			<AnimatePresence mode="sync">
 				{firebaseLoaded ? (
 					<AnimatePresence mode="wait" initial={false}>

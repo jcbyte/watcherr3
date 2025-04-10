@@ -14,6 +14,7 @@ import { useTheme } from "@/components/ui/theme-provider";
 import { firebaseSignOut } from "@/firebase/auth";
 import useContentList from "@/hooks/useContentList";
 import { User } from "firebase/auth";
+import { AnimatePresence, motion } from "framer-motion";
 import { LogOut, Moon, Plus, Sun } from "lucide-react";
 import { useState } from "react";
 
@@ -69,30 +70,40 @@ export default function AppPage({ user }: { user: User }) {
 
 					<Separator />
 
-					<div className="w-full flex flex-col justify-center items-center gap-2">
+					<div className="w-full flex flex-col justify-center items-center gap-2 overflow-y-visible">
 						{content ? (
 							content.length === 0 ? (
 								<span className="text-sm text-muted-foreground">No items yet</span>
 							) : (
-								content.map((content, index) =>
-									editingContent.includes(content.id) ? (
-										<ContentForm
-											key={index}
-											content={content}
-											close={() => {
-												setEditingContent((prev) => prev.filter((contentId) => contentId !== content.id));
-											}}
-										/>
-									) : (
-										<ContentItem
-											key={index}
-											content={content}
-											onEdit={() => {
-												setEditingContent((prev) => [...prev, content.id]);
-											}}
-										/>
-									)
-								)
+								<AnimatePresence initial={false}>
+									{content.map((content) => (
+										<motion.div
+											key={`content-${content.id}`}
+											layout
+											initial={{ opacity: 0, scale: 0.4 }}
+											animate={{ opacity: 1, scale: 1 }}
+											exit={{ opacity: 0, scale: 0.4 }}
+											transition={{ type: "spring", stiffness: 200, damping: 20 }}
+											className="w-full"
+										>
+											{editingContent.includes(content.id) ? (
+												<ContentForm
+													content={content}
+													close={() => {
+														setEditingContent((prev) => prev.filter((contentId) => contentId !== content.id));
+													}}
+												/>
+											) : (
+												<ContentItem
+													content={content}
+													onEdit={() => {
+														setEditingContent((prev) => [...prev, content.id]);
+													}}
+												/>
+											)}
+										</motion.div>
+									))}
+								</AnimatePresence>
 							)
 						) : (
 							[...Array(3)].map((_, index) => <Skeleton key={index} className="w-full h-[3.25rem]" />)
