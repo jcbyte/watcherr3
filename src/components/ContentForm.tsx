@@ -6,6 +6,7 @@ import { addContent, editContent } from "@/firebase/firestore";
 import { Content } from "@/types";
 import { WithId } from "@/util/types";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AnimatePresence, motion } from "framer-motion";
 import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -241,53 +242,62 @@ export default function ContentForm({
 						/>
 					</div>
 
-					{formType === "series" && (
-						<div className="flex items-start gap-2">
-							<FormField
-								control={form.control}
-								name="season"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Season</FormLabel>
-										<FormControl>
-											<Input
-												type="number"
-												min={1}
-												step={1}
-												autoComplete="off"
-												{...field}
-												disabled={updating}
-												className="border-none"
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
+					<AnimatePresence initial={false}>
+						{formType === "series" && (
+							<motion.div
+								initial={{ opacity: 0, height: 0 }}
+								// ? This 58 is hardcoded as the height of these boxes
+								animate={{ opacity: 1, height: "calc(58px + 0.5rem)" }}
+								exit={{ opacity: 0, height: 0 }}
+								transition={{ duration: 0.2 }}
+								className="flex items-start gap-2 -mb-2"
+							>
+								<FormField
+									control={form.control}
+									name="season"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Season</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													min={1}
+													step={1}
+													autoComplete="off"
+													{...field}
+													disabled={updating}
+													className="border-none"
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
 
-							<FormField
-								control={form.control}
-								name="episode"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Episode</FormLabel>
-										<FormControl>
-											<Input
-												type="number"
-												min={1}
-												step={1}
-												autoComplete="off"
-												disabled={updating}
-												{...field}
-												className="border-none"
-											/>
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</div>
-					)}
+								<FormField
+									control={form.control}
+									name="episode"
+									render={({ field }) => (
+										<FormItem>
+											<FormLabel>Episode</FormLabel>
+											<FormControl>
+												<Input
+													type="number"
+													min={1}
+													step={1}
+													autoComplete="off"
+													disabled={updating}
+													{...field}
+													className="border-none"
+												/>
+											</FormControl>
+											<FormMessage />
+										</FormItem>
+									)}
+								/>
+							</motion.div>
+						)}
+					</AnimatePresence>
 
 					<div className="flex gap-2 place-self-end">
 						<Button type="button" variant="outline" disabled={updating} onClick={() => close(false)}>
