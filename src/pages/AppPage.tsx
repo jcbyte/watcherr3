@@ -19,6 +19,11 @@ import { LogOut, Moon, Plus, Sun } from "lucide-react";
 import { useState } from "react";
 
 const springTransition: Transition = { type: "spring", stiffness: 200, damping: 20 };
+const popInAnimation = {
+	initial: { opacity: 0, scale: 0.4 },
+	animate: { opacity: 1, scale: 1 },
+	exit: { opacity: 0, scale: 0.4 },
+};
 
 export default function AppPage({ user }: { user: User }) {
 	const { theme, setTheme } = useTheme();
@@ -74,17 +79,23 @@ export default function AppPage({ user }: { user: User }) {
 
 					<div className="w-full flex flex-col justify-center items-center gap-2">
 						{content ? (
-							content.length === 0 ? (
-								<span className="text-sm text-muted-foreground">No items yet</span>
-							) : (
-								<AnimatePresence initial={false}>
-									{content.map((content) => (
+							<AnimatePresence initial={false}>
+								{content.length === 0 ? (
+									<motion.span
+										layout
+										{...popInAnimation}
+										exit={{}}
+										transition={springTransition}
+										className="text-sm text-muted-foreground"
+									>
+										No items yet
+									</motion.span>
+								) : (
+									content.map((content) => (
 										<motion.div
 											key={`content-${content.id}`}
 											layout
-											initial={{ opacity: 0, scale: 0.4 }}
-											animate={{ opacity: 1, scale: 1 }}
-											exit={{ opacity: 0, scale: 0.4 }}
+											{...popInAnimation}
 											transition={springTransition}
 											className="w-full"
 										>
@@ -104,9 +115,9 @@ export default function AppPage({ user }: { user: User }) {
 												/>
 											)}
 										</motion.div>
-									))}
-								</AnimatePresence>
-							)
+									))
+								)}
+							</AnimatePresence>
 						) : (
 							[...Array(3)].map((_, index) => <Skeleton key={index} className="w-full h-[3.25rem]" />)
 						)}
