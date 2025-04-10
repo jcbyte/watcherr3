@@ -23,8 +23,8 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 				) : (
 					<span className="text-sm font-semibold">{content.title}</span>
 				)}
-				<div className="flex justify-center items-center gap-1">
-					{content.type === "series" && (
+				<div className="flex items-center gap-1">
+					{content.type === "series" ? (
 						<div className="flex justify-center items-center gap-1">
 							<div className="flex justify-center items-center">
 								<span className="text-muted-foreground text-sm">Season {content.season}</span>
@@ -70,6 +70,8 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 								</div>
 							</div>
 						</div>
+					) : (
+						<span className="text-muted-foreground text-sm">Film</span>
 					)}
 					{content.time && <span className="text-sm font-semibold">{content.time}m</span>}
 				</div>
