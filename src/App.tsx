@@ -6,8 +6,6 @@ import { LoaderCircle } from "lucide-react";
 import { useState } from "react";
 import SignInPage from "./pages/SignInPage";
 
-// todo animate
-
 export default function App() {
 	const auth = getAuth(app);
 
@@ -19,20 +17,40 @@ export default function App() {
 	});
 
 	return (
-		<div className="w-full flex justify-center items-center p-2">
+		<div className="w-full flex justify-center items-center p-2 overflow-x-hidden">
 			<AnimatePresence mode="sync">
 				{firebaseLoaded ? (
-					currentUser ? (
-						<AppPage user={currentUser} />
-					) : (
-						<SignInPage />
-					)
+					<AnimatePresence mode="wait" initial={false}>
+						{currentUser ? (
+							<motion.div
+								key="app-page"
+								initial={{ opacity: 0, x: "1rem" }}
+								animate={{ opacity: 1, x: 0 }}
+								exit={{ opacity: 0, x: "1rem" }}
+								transition={{ duration: 0.1 }}
+								className="w-full"
+							>
+								<AppPage user={currentUser} />
+							</motion.div>
+						) : (
+							<motion.div
+								key="sign-in-page"
+								initial={{ opacity: 0, x: "-1rem" }}
+								animate={{ opacity: 1, x: 0 }}
+								exit={{ opacity: 0, x: "-1rem" }}
+								transition={{ duration: 0.1 }}
+								className="w-full"
+							>
+								<SignInPage />
+							</motion.div>
+						)}
+					</AnimatePresence>
 				) : (
 					<motion.div
 						key="app-loader"
 						animate={{ y: 0 }}
 						exit={{ y: "calc(-100% - 3rem)" }}
-						transition={{ duration: 0.2, ease: "easeIn" }}
+						transition={{ duration: 0.2 }}
 						className="fixed top-12 flex flex-col justify-center items-center gap-4 p-4 min-w-80 bg-background border border-border rounded-md z-10"
 					>
 						<img src="icon/icon-192.png" alt="App Logo" className="size-24" />

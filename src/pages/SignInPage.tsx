@@ -5,8 +5,8 @@ import { signInWithGoogle } from "@/firebase/auth";
 
 export default function SignInPage() {
 	return (
-		<>
-			<div className="flex flex-col items-center justify-center gap-4 bg-card p-8 rounded-md min-w-96">
+		<div className="flex justify-center items-center w-full">
+			<div className="flex flex-col items-center justify-center gap-4 bg-card p-8 rounded-md w-full max-w-96">
 				<div className="flex flex-col items-center justify-center">
 					<span className="text-2xl font-bold text-center">Welcome to Watcherr3</span>
 					<span className="text-muted-foreground text-center">Sign in to start your watchlist</span>
@@ -18,6 +18,6 @@ export default function SignInPage() {
 				</Button>
 				<span className="text-sm text-muted-foreground text-center">Watcherr3 v3.0.0 by Joel Cutler</span>
 			</div>
-		</>
+		</div>
 	);
 }
