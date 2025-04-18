@@ -78,7 +78,6 @@ const formSchema = z
 		// Time error handling
 		if (vals.time) {
 			const timeNum = Number(vals.time);
-			console.log(vals.time, timeNum);
 			if (Number.isNaN(timeNum) || !Number.isInteger(timeNum)) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,

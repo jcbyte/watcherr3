@@ -34,7 +34,9 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 										if (updatingContent) return;
 
 										setUpdatingContent(true);
-										await editContent({ ...content, season: content.season + 1, episode: 1 });
+										const newContent = { ...content, season: content.season + 1, episode: 1 };
+										delete newContent.time;
+										await editContent(newContent);
 										setUpdatingContent(false);
 									}}
 								>
@@ -56,7 +58,9 @@ export default function ContentItem({ content, onEdit }: { content: WithId<Conte
 										if (updatingContent) return;
 
 										setUpdatingContent(true);
-										await editContent({ ...content, episode: content.episode + 1 });
+										const newContent = { ...content, episode: content.episode + 1 };
+										delete newContent.time;
+										await editContent(newContent);
 										setUpdatingContent(false);
 									}}
 								>
