@@ -35,7 +35,7 @@ export default function AppPage({ user }: { user: User }) {
 
 	return (
 		<div className="flex justify-center items-center w-full">
-			<div className="flex flex-col items-center justify-center gap-4 w-full max-w-96">
+			<div className="flex flex-col items-center justify-center gap-4 w-full max-w-[40rem]">
 				<div className="flex justify-between items-center w-full">
 					<span className="text-2xl font-semibold">Watcherr3</span>
 

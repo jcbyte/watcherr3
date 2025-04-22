@@ -16,7 +16,7 @@ export default function SignInPage() {
 					<img src={GoogleGLogo} className="size-5" />
 					<span className="font-semibold">Continue with Google</span>
 				</Button>
-				<span className="text-sm text-muted-foreground text-center">Watcherr3 v3.0.0 by Joel Cutler</span>
+				<span className="text-sm text-muted-foreground text-center">Watcherr3 v3.0.1 by Joel Cutler</span>
 			</div>
 		</div>
 	);
